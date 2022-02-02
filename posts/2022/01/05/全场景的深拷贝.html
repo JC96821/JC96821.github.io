@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>全场景的深拷贝 | JC 的博客 ｜ JC Blog</title>
+    <meta name="generator" content="VuePress 1.9.7">
+    <link rel="icon" href="/favicon.ico">
+    <meta name="description" content="JC的个人博客">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+    
+    <link rel="preload" href="/assets/css/0.styles.15e1bad7.css" as="style"><link rel="preload" href="/assets/js/app.8504fffa.js" as="script"><link rel="preload" href="/assets/js/6.da15717f.js" as="script"><link rel="preload" href="/assets/js/23.45eaf1b0.js" as="script"><link rel="prefetch" href="/assets/js/10.7ec07503.js"><link rel="prefetch" href="/assets/js/11.4a5f47cf.js"><link rel="prefetch" href="/assets/js/12.2d0126c8.js"><link rel="prefetch" href="/assets/js/13.733e1a7a.js"><link rel="prefetch" href="/assets/js/14.301a49bb.js"><link rel="prefetch" href="/assets/js/15.88e93612.js"><link rel="prefetch" href="/assets/js/16.a59e5dec.js"><link rel="prefetch" href="/assets/js/17.aa8b4020.js"><link rel="prefetch" href="/assets/js/18.d2da0062.js"><link rel="prefetch" href="/assets/js/19.d29929c6.js"><link rel="prefetch" href="/assets/js/2.8ce2f98a.js"><link rel="prefetch" href="/assets/js/20.03410f37.js"><link rel="prefetch" href="/assets/js/21.4ec6b186.js"><link rel="prefetch" href="/assets/js/22.5c32950e.js"><link rel="prefetch" href="/assets/js/24.7847c935.js"><link rel="prefetch" href="/assets/js/25.2e516fc3.js"><link rel="prefetch" href="/assets/js/26.99f7fb7f.js"><link rel="prefetch" href="/assets/js/27.86c436d4.js"><link rel="prefetch" href="/assets/js/28.aa42632a.js"><link rel="prefetch" href="/assets/js/29.083a3be7.js"><link rel="prefetch" href="/assets/js/3.adce40f7.js"><link rel="prefetch" href="/assets/js/30.2fe5529a.js"><link rel="prefetch" href="/assets/js/31.fdd755e6.js"><link rel="prefetch" href="/assets/js/32.d4b9442a.js"><link rel="prefetch" href="/assets/js/33.a5862ffb.js"><link rel="prefetch" href="/assets/js/34.00459157.js"><link rel="prefetch" href="/assets/js/35.f6522a04.js"><link rel="prefetch" href="/assets/js/36.66ab36b9.js"><link rel="prefetch" href="/assets/js/37.e16acb91.js"><link rel="prefetch" href="/assets/js/38.140b6208.js"><link rel="prefetch" href="/assets/js/39.a5ba92ca.js"><link rel="prefetch" href="/assets/js/4.802a3336.js"><link rel="prefetch" href="/assets/js/40.7daa239e.js"><link rel="prefetch" href="/assets/js/41.e2464678.js"><link rel="prefetch" href="/assets/js/42.7fd3060a.js"><link rel="prefetch" href="/assets/js/43.03a6ff6e.js"><link rel="prefetch" href="/assets/js/44.196f2ad9.js"><link rel="prefetch" href="/assets/js/45.6da71366.js"><link rel="prefetch" href="/assets/js/46.a3c6da46.js"><link rel="prefetch" href="/assets/js/5.253e470e.js"><link rel="prefetch" href="/assets/js/7.73dc85ed.js"><link rel="prefetch" href="/assets/js/8.9c25d04a.js"><link rel="prefetch" href="/assets/js/9.7a9df756.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.15e1bad7.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div id="global-layout" data-v-7f2e4136><header class="header-container" style="background-size:cover;background-repeat:no-repeat;background-position:center;background-attachment:scroll;background-image:url(/post-bg.jpeg);" data-v-93921ff8 data-v-7f2e4136><nav class="navbar" style="position:absolute;opacity:1;transition:all 0.5s ease-in-out;" data-v-93921ff8><a href="/" class="navbar-link router-link-active">
+    JC Blog
+  </a> <ul class="navbar-links"><li><a href="/" class="router-link-active">
+        HOME
+      </a></li><li><a href="/about/">
+        ABOUT
+      </a></li><li><a href="/tags/">
+        TAGS
+      </a></li></ul> <div id="nav-icon"><span></span><span></span><span></span></div></nav> <div class="header-title" data-v-93921ff8 data-v-93921ff8><h1 data-v-93921ff8>全场景的深拷贝</h1> <p data-v-93921ff8></p></div></header> <div class="container" data-v-b3fda33c data-v-7f2e4136><main class="main" style="width:60%;" data-v-b3fda33c><div class="post" data-v-b3fda33c data-v-b3fda33c><article class="main-div"><div class="post-content content content__default"><h2 id="全场景的深拷贝"><a href="#全场景的深拷贝" class="header-anchor">#</a> 全场景的深拷贝</h2> <div class="language-javascript extra-class"><pre class="language-javascript"><code><span class="token comment">// type tag</span>
+<span class="token keyword">const</span> objTag <span class="token operator">=</span> <span class="token string">'[object Object]'</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> arrTag <span class="token operator">=</span> <span class="token string">'[oject Array]'</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> dateTag <span class="token operator">=</span> <span class="token string">'[object Date]'</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> mapTag <span class="token operator">=</span> <span class="token string">'[object Map]'</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> setTag <span class="token operator">=</span> <span class="token string">'[object Set]'</span><span class="token punctuation">;</span>
+<span class="token comment">/**
+ * clone function
+ * 写这几种类型就够，当然实际场景下根据需求扩展
+*/</span>
+<span class="token keyword">const</span> <span class="token function-variable function">cloneDeep</span> <span class="token operator">=</span> <span class="token parameter">target</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> type <span class="token operator">=</span> <span class="token class-name">Object</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span>target<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">switch</span> <span class="token punctuation">(</span>type<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 对象类型</span>
+        <span class="token keyword">case</span> <span class="token literal-property property">objTag</span><span class="token operator">:</span>
+            <span class="token keyword">return</span> Object<span class="token punctuation">.</span><span class="token function">keys</span><span class="token punctuation">(</span>target<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">reduce</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">result<span class="token punctuation">,</span> key</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+                <span class="token keyword">const</span> value <span class="token operator">=</span> target<span class="token punctuation">[</span>key<span class="token punctuation">]</span><span class="token punctuation">;</span>
+                result<span class="token punctuation">[</span>key<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">cloneDeep</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token keyword">return</span> result<span class="token punctuation">;</span>
+            <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// 数组类型</span>
+        <span class="token keyword">case</span> <span class="token literal-property property">arrTag</span><span class="token operator">:</span>
+            <span class="token keyword">return</span> target<span class="token punctuation">.</span><span class="token function">reduce</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">result<span class="token punctuation">,</span> key</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+                <span class="token keyword">const</span> value <span class="token operator">=</span> target<span class="token punctuation">[</span>key<span class="token punctuation">]</span><span class="token punctuation">;</span>
+                result<span class="token punctuation">[</span>key<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">cloneDeep</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token keyword">return</span> result<span class="token punctuation">;</span>
+            <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// 日期类型</span>
+        <span class="token keyword">case</span> <span class="token literal-property property">dateTag</span><span class="token operator">:</span>
+            <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">target<span class="token punctuation">.</span>constructor</span><span class="token punctuation">(</span>target<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// set集合</span>
+        <span class="token keyword">case</span> <span class="token literal-property property">setTag</span><span class="token operator">:</span>
+            <span class="token keyword">const</span> cloneSet <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Set</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">return</span> <span class="token punctuation">[</span><span class="token operator">...</span>target<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">reduce</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">result<span class="token punctuation">,</span> item</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+                result<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>item<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token keyword">return</span> result<span class="token punctuation">;</span>
+            <span class="token punctuation">}</span><span class="token punctuation">,</span> cloneSet<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// map映射表</span>
+        <span class="token keyword">case</span> <span class="token literal-property property">mapTag</span><span class="token operator">:</span>
+            <span class="token keyword">const</span> cloneMap <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Map</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            target<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">item<span class="token punctuation">,</span> key</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+                cloneMap<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span>key<span class="token punctuation">,</span> item<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">return</span> cloneMap<span class="token punctuation">;</span>
+        <span class="token comment">// 其他默认为基本类型返回自己就行</span>
+        <span class="token keyword">default</span><span class="token operator">:</span>
+            <span class="token keyword">return</span> target<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token comment">// 模拟使用场景👌</span>
+<span class="token comment">// new map</span>
+<span class="token keyword">const</span> g <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Map</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+g<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token string">'a'</span><span class="token punctuation">,</span> <span class="token string">'aaa'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+g<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token string">'b'</span><span class="token punctuation">,</span> <span class="token string">'bbb'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// new set</span>
+<span class="token keyword">const</span> h <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Set</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// object</span>
+<span class="token keyword">const</span> test <span class="token operator">=</span> <span class="token punctuation">{</span>
+    <span class="token literal-property property">a</span><span class="token operator">:</span> <span class="token string">'a'</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">b</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token literal-property property">b1</span><span class="token operator">:</span> <span class="token string">'b1'</span><span class="token punctuation">,</span>
+        <span class="token literal-property property">b2</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+            <span class="token literal-property property">b21</span><span class="token operator">:</span> <span class="token string">'b21'</span><span class="token punctuation">,</span>
+            <span class="token literal-property property">b22</span><span class="token operator">:</span> <span class="token string">'b22'</span><span class="token punctuation">,</span>
+            <span class="token literal-property property">b23</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+                <span class="token literal-property property">b231</span><span class="token operator">:</span> <span class="token string">'b231'</span><span class="token punctuation">,</span>
+                <span class="token literal-property property">b232</span><span class="token operator">:</span> <span class="token string">'b232'</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token literal-property property">b3</span><span class="token operator">:</span> <span class="token string">'b3'</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">c</span><span class="token operator">:</span> <span class="token number">1000</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">d</span><span class="token operator">:</span> <span class="token function">Error</span><span class="token punctuation">(</span><span class="token string">'this is a error'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">e</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">f</span><span class="token operator">:</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token string">'2022-12-12'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    g<span class="token punctuation">,</span>
+    h<span class="token punctuation">,</span>
+    <span class="token literal-property property">i</span><span class="token operator">:</span> <span class="token boolean">false</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> obj <span class="token operator">=</span> <span class="token function">cloneDeep</span><span class="token punctuation">(</span>test<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// 测试一下，木有问题</span>
+obj<span class="token punctuation">.</span>h<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token number">999</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+obj<span class="token punctuation">.</span>i <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'obj: '</span><span class="token punctuation">,</span> obj<span class="token punctuation">,</span> test<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div></div></article> <!----></div></main> <aside class="aside" data-v-b3fda33c data-v-b3fda33c><div class="info-card main-div" data-v-1311ce9e data-v-b3fda33c><div class="info-card-header" style="background-size:cover;background-repeat:no-repeat;background-position:center;background-attachment:scroll;background-image:url(/avatar-bg.jpeg);" data-v-1311ce9e><img src="/avatar-top.jpeg" alt="jc" class="info-avatar" data-v-1311ce9e></div> <div class="info-card-body" data-v-1311ce9e><section class="info-name" data-v-1311ce9e>
+      jc
+    </section> <section class="info-desc" data-v-1311ce9e>In me the tiger sniffs the rose<br/>心有猛虎，细嗅蔷薇</section> <section class="info-contact" data-v-1311ce9e><section data-v-1311ce9e><span data-v-1311ce9e data-v-1311ce9e><svg class="icon" style="font-size:1em;" data-v-1311ce9e data-v-1311ce9e><use xlink:href="#icon-location" data-v-1311ce9e data-v-1311ce9e></use></svg><span class="info-text" data-v-1311ce9e data-v-1311ce9e>
+          Beijing, China
+        </span></span></section> <!----> <section data-v-1311ce9e><span data-v-1311ce9e data-v-1311ce9e><svg class="icon" style="font-size:1em;" data-v-1311ce9e data-v-1311ce9e><use xlink:href="#icon-email" data-v-1311ce9e data-v-1311ce9e></use></svg><span class="info-text" data-v-1311ce9e data-v-1311ce9e>
+          13478707150@163.com
+        </span></span></section></section></div> <div class="info-card-footer" data-v-1311ce9e><p class="footer-sns-link" data-v-1311ce9e><a target="_blank" href="https://juejin.cn/user/1151943917967704" class="sns-link" data-v-1311ce9e><span class="sns-icon" data-v-1311ce9e data-v-1311ce9e><svg class="icon" style="font-size:35px;" data-v-1311ce9e data-v-1311ce9e><use xlink:href="#icon-juejin" data-v-1311ce9e data-v-1311ce9e></use></svg></span></a><a target="_blank" href="https://gitee.com/jin-ec" class="sns-link" data-v-1311ce9e><span class="sns-icon" data-v-1311ce9e data-v-1311ce9e><svg class="icon" style="font-size:35px;" data-v-1311ce9e data-v-1311ce9e><use xlink:href="#icon-github" data-v-1311ce9e data-v-1311ce9e></use></svg></span></a></p></div></div> <div class="post-toc main-div aside-toc" style="position:relative;top:0;width:0px;" data-v-b3fda33c><h4>- CATALOG</h4> <div class="post-nav-toc"><ul><li><a href="/posts/2022/01/05/%E5%85%A8%E5%9C%BA%E6%99%AF%E7%9A%84%E6%B7%B1%E6%8B%B7%E8%B4%9D.html#全场景的深拷贝">全场景的深拷贝</a></li></ul></div></div></aside></div> <footer class="footer" data-v-7f2e4136><p class="footer-sns-link"><a target="_blank" href="https://juejin.cn/user/1151943917967704" class="sns-link"><span class="sns-icon"><svg class="icon" style="font-size:40px;"><use xlink:href="#icon-juejin"></use></svg></span></a><a target="_blank" href="https://gitee.com/jin-ec" class="sns-link"><span class="sns-icon"><svg class="icon" style="font-size:40px;"><use xlink:href="#icon-github"></use></svg></span></a></p> <div class="copyright"><span id="custom">Copyright &copy; Top Blog 2022 <br /> 
+        Theme By <a href="https://www.vuepress.cn/" target="_blank">VuePress</a>
+        | <a href="https://www.github.com/youdeliang/" target="_blank">youdeliang</a></span> <iframe src="https://ghbtns.com/github-btn.html?user=youdeliang&amp;repo=vuepress-theme-melodydl&amp;type=star&amp;count=true" frameborder="0" scrolling="0" width="80px" height="20px" class="footer-btn" style="margin-left: 2px; margin-bottom:-5px;"></iframe></div></footer></div><div class="global-ui"><!----><!----></div></div>
+    <script src="/assets/js/app.8504fffa.js" defer></script><script src="/assets/js/6.da15717f.js" defer></script><script src="/assets/js/23.45eaf1b0.js" defer></script>
+  </body>
+</html>

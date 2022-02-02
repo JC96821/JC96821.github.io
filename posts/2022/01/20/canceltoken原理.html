@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>cancel token实现原理 | JC 的博客 ｜ JC Blog</title>
+    <meta name="generator" content="VuePress 1.9.7">
+    <link rel="icon" href="/favicon.ico">
+    <meta name="description" content="JC的个人博客">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+    
+    <link rel="preload" href="/assets/css/0.styles.8bd0728e.css" as="style"><link rel="preload" href="/assets/js/app.f37d2ba3.js" as="script"><link rel="preload" href="/assets/js/6.975bd1aa.js" as="script"><link rel="preload" href="/assets/js/31.7547f3e5.js" as="script"><link rel="prefetch" href="/assets/js/10.a396e63e.js"><link rel="prefetch" href="/assets/js/11.18554ec9.js"><link rel="prefetch" href="/assets/js/12.22088f1c.js"><link rel="prefetch" href="/assets/js/13.d773d106.js"><link rel="prefetch" href="/assets/js/14.88472ec9.js"><link rel="prefetch" href="/assets/js/15.19ba79b3.js"><link rel="prefetch" href="/assets/js/16.2cfeef69.js"><link rel="prefetch" href="/assets/js/17.49f8d372.js"><link rel="prefetch" href="/assets/js/18.77177766.js"><link rel="prefetch" href="/assets/js/19.061a57b7.js"><link rel="prefetch" href="/assets/js/2.225c5343.js"><link rel="prefetch" href="/assets/js/20.ec18bdea.js"><link rel="prefetch" href="/assets/js/21.890142b9.js"><link rel="prefetch" href="/assets/js/22.60e8ec2e.js"><link rel="prefetch" href="/assets/js/23.7e91a072.js"><link rel="prefetch" href="/assets/js/24.3933f615.js"><link rel="prefetch" href="/assets/js/25.6b35d3c0.js"><link rel="prefetch" href="/assets/js/26.b08f56f3.js"><link rel="prefetch" href="/assets/js/27.f4188868.js"><link rel="prefetch" href="/assets/js/28.c056312e.js"><link rel="prefetch" href="/assets/js/29.8faf8135.js"><link rel="prefetch" href="/assets/js/3.d94c6cf3.js"><link rel="prefetch" href="/assets/js/30.b871d05b.js"><link rel="prefetch" href="/assets/js/32.bc7318d5.js"><link rel="prefetch" href="/assets/js/33.9ab7944e.js"><link rel="prefetch" href="/assets/js/34.f9276b02.js"><link rel="prefetch" href="/assets/js/35.a9251a15.js"><link rel="prefetch" href="/assets/js/36.b8dc7330.js"><link rel="prefetch" href="/assets/js/37.17038ca0.js"><link rel="prefetch" href="/assets/js/38.06993ded.js"><link rel="prefetch" href="/assets/js/39.2c1b6679.js"><link rel="prefetch" href="/assets/js/4.5814946b.js"><link rel="prefetch" href="/assets/js/40.afdfc637.js"><link rel="prefetch" href="/assets/js/41.6e8a99be.js"><link rel="prefetch" href="/assets/js/42.9ae07feb.js"><link rel="prefetch" href="/assets/js/43.a0040bdc.js"><link rel="prefetch" href="/assets/js/44.bd649e30.js"><link rel="prefetch" href="/assets/js/5.29d8c494.js"><link rel="prefetch" href="/assets/js/7.b6a99f8a.js"><link rel="prefetch" href="/assets/js/8.094a2446.js"><link rel="prefetch" href="/assets/js/9.56ae0187.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.8bd0728e.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div id="global-layout" data-v-7f2e4136><header class="header-container" style="background-size:cover;background-repeat:no-repeat;background-position:center;background-attachment:scroll;background-image:url(/post-bg.jpeg);" data-v-93921ff8 data-v-7f2e4136><nav class="navbar" style="position:absolute;opacity:1;transition:all 0.5s ease-in-out;" data-v-93921ff8><a href="/" class="navbar-link router-link-active">
+    JC Blog
+  </a> <ul class="navbar-links"><li><a href="/" class="router-link-active">
+        HOME
+      </a></li><li><a href="/about/">
+        ABOUT
+      </a></li><li><a href="/tags/">
+        TAGS
+      </a></li></ul> <div id="nav-icon"><span></span><span></span><span></span></div></nav> <div class="header-title" data-v-93921ff8 data-v-93921ff8><h1 data-v-93921ff8>cancel token实现原理</h1> <p data-v-93921ff8></p></div></header> <div class="container" data-v-b3fda33c data-v-7f2e4136><main class="main" style="width:60%;" data-v-b3fda33c><div class="post" data-v-b3fda33c data-v-b3fda33c><article class="main-div"><div class="post-content content content__default"><h2 id="cancel-token实现原理"><a href="#cancel-token实现原理" class="header-anchor">#</a> cancel token实现原理</h2> <blockquote><p>是<code>promise</code>执行任务的分离控制，将resolve能力抛给外部控制，当用户执行<code>cancel</code>方法时，<code>resolve</code>掉<code>axios</code>中的<code>promise</code>任务并<code>abort</code>请求。</p></blockquote> <div class="language-javascript extra-class"><pre class="language-javascript"><code><span class="token keyword">var</span> Cancel <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'./Cancel'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">/**
+ * @class
+ * @param {Function} executor 传入的执行函数，用于获取获取promise的resolve能力
+ */</span>
+<span class="token keyword">function</span> <span class="token function">CancelToken</span><span class="token punctuation">(</span><span class="token parameter">executor</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">typeof</span> executor <span class="token operator">!==</span> <span class="token string">'function'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">TypeError</span><span class="token punctuation">(</span><span class="token string">'executor must be a function.'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">var</span> resolvePromise<span class="token punctuation">;</span>
+
+  <span class="token keyword">this</span><span class="token punctuation">.</span>promise <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Promise</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token function">promiseExecutor</span><span class="token punctuation">(</span><span class="token parameter">resolve</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    resolvePromise <span class="token operator">=</span> resolve<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token function">executor</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token function">cancel</span><span class="token punctuation">(</span><span class="token parameter">message</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>token<span class="token punctuation">.</span>reason<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// Cancellation has already been requested</span>
+      <span class="token keyword">return</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    token<span class="token punctuation">.</span>reason <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Cancel</span><span class="token punctuation">(</span>message<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">resolvePromise</span><span class="token punctuation">(</span>token<span class="token punctuation">.</span>reason<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">/**
+ * 返回一个对象
+ * @returns token axios中会判断是否有这个token,有的话则插入token提供的promise任务
+ * @returns cancel 暴露的token =&gt; promise =&gt; resolve方法，用于用户手动终端promise任务
+ */</span>
+CancelToken<span class="token punctuation">.</span><span class="token function-variable function">source</span> <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token function">source</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> cancel<span class="token punctuation">;</span>
+  <span class="token keyword">var</span> token <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">CancelToken</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token function">executor</span><span class="token punctuation">(</span><span class="token parameter">c</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    cancel <span class="token operator">=</span> c<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> <span class="token punctuation">{</span>
+    <span class="token literal-property property">token</span><span class="token operator">:</span> token<span class="token punctuation">,</span>
+    <span class="token literal-property property">cancel</span><span class="token operator">:</span> cancel
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+module<span class="token punctuation">.</span>exports <span class="token operator">=</span> CancelToken<span class="token punctuation">;</span>
+</code></pre></div></div></article> <div class="main-div vssue"><!----></div></div></main> <aside class="aside" data-v-b3fda33c data-v-b3fda33c><div class="info-card main-div" data-v-1311ce9e data-v-b3fda33c><div class="info-card-header" style="background-size:cover;background-repeat:no-repeat;background-position:center;background-attachment:scroll;background-image:url(/avatar-bg.jpeg);" data-v-1311ce9e><img src="/avatar-top.jpeg" alt="jc" class="info-avatar" data-v-1311ce9e></div> <div class="info-card-body" data-v-1311ce9e><section class="info-name" data-v-1311ce9e>
+      jc
+    </section> <section class="info-desc" data-v-1311ce9e>In me the tiger sniffs the rose<br/>心有猛虎，细嗅蔷薇</section> <section class="info-contact" data-v-1311ce9e><section data-v-1311ce9e><span data-v-1311ce9e data-v-1311ce9e><svg class="icon" style="font-size:1em;" data-v-1311ce9e data-v-1311ce9e><use xlink:href="#icon-location" data-v-1311ce9e data-v-1311ce9e></use></svg><span class="info-text" data-v-1311ce9e data-v-1311ce9e>
+          Beijing, China
+        </span></span></section> <!----> <section data-v-1311ce9e><span data-v-1311ce9e data-v-1311ce9e><svg class="icon" style="font-size:1em;" data-v-1311ce9e data-v-1311ce9e><use xlink:href="#icon-email" data-v-1311ce9e data-v-1311ce9e></use></svg><span class="info-text" data-v-1311ce9e data-v-1311ce9e>
+          13478707150@163.com
+        </span></span></section></section></div> <div class="info-card-footer" data-v-1311ce9e><p class="footer-sns-link" data-v-1311ce9e><a target="_blank" href="https://juejin.cn/user/1151943917967704" class="sns-link" data-v-1311ce9e><span class="sns-icon" data-v-1311ce9e data-v-1311ce9e><svg class="icon" style="font-size:35px;" data-v-1311ce9e data-v-1311ce9e><use xlink:href="#icon-juejin" data-v-1311ce9e data-v-1311ce9e></use></svg></span></a><a target="_blank" href="https://gitee.com/jin-ec" class="sns-link" data-v-1311ce9e><span class="sns-icon" data-v-1311ce9e data-v-1311ce9e><svg class="icon" style="font-size:35px;" data-v-1311ce9e data-v-1311ce9e><use xlink:href="#icon-github" data-v-1311ce9e data-v-1311ce9e></use></svg></span></a></p></div></div> <div class="post-toc main-div aside-toc" style="position:relative;top:0;width:0px;" data-v-b3fda33c><h4>- CATALOG</h4> <div class="post-nav-toc"><ul><li><a href="/posts/2022/01/20/canceltoken%E5%8E%9F%E7%90%86.html#cancel-token实现原理">cancel token实现原理</a></li></ul></div></div></aside></div> <footer class="footer" data-v-7f2e4136><p class="footer-sns-link"><a target="_blank" href="https://juejin.cn/user/1151943917967704" class="sns-link"><span class="sns-icon"><svg class="icon" style="font-size:40px;"><use xlink:href="#icon-juejin"></use></svg></span></a><a target="_blank" href="https://gitee.com/jin-ec" class="sns-link"><span class="sns-icon"><svg class="icon" style="font-size:40px;"><use xlink:href="#icon-github"></use></svg></span></a></p> <div class="copyright"><span id="custom">Copyright &copy; Top Blog 2022 <br /> 
+        Theme By <a href="https://www.vuepress.cn/" target="_blank">VuePress</a>
+        | <a href="https://www.github.com/youdeliang/" target="_blank">youdeliang</a></span> <iframe src="https://ghbtns.com/github-btn.html?user=youdeliang&amp;repo=vuepress-theme-melodydl&amp;type=star&amp;count=true" frameborder="0" scrolling="0" width="80px" height="20px" class="footer-btn" style="margin-left: 2px; margin-bottom:-5px;"></iframe></div></footer></div><div class="global-ui"><!----><!----></div></div>
+    <script src="/assets/js/app.f37d2ba3.js" defer></script><script src="/assets/js/6.975bd1aa.js" defer></script><script src="/assets/js/31.7547f3e5.js" defer></script>
+  </body>
+</html>
