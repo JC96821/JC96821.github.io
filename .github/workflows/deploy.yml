@@ -10,7 +10,7 @@ jobs:
     - name: vuepress-deploy
       uses: jenkey2011/vuepress-deploy@master
       env:
-        ACCESS_TOKEN: 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
+        ACCESS_TOKEN: ${{ secrets._TOKEN }}
         TARGET_REPO: JC96821/JC96821.github.io
         TARGET_BRANCH: gh-pages
         BUILD_SCRIPT: npm run build
