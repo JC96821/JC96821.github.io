@@ -9,9 +9,9 @@ import './index.less';
 const PRE_FIX = 'project-container';
 
 export default () => {
-   return (
-       <div className={PRE_FIX}>
-           project
-       </div>
-   );
+    return (
+        <div className={PRE_FIX}>
+            project
+        </div>
+    );
 };
