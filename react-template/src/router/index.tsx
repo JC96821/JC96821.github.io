@@ -6,7 +6,7 @@
 import React from 'react';
 import {Redirect} from 'react-router';
 import {CacheRouteProps} from 'react-router-cache-route';
-
+// import {RouteConfig} from 'react-router-config';
 export * from './utils';
 
 export const routes: CacheRouteProps[] =  [

@@ -13,3 +13,4 @@ export const renderRoutes = (routes: CacheRouteProps[]) => (
         ))}
     </CacheSwitch>
 );
+// export * from 'react-router-config';

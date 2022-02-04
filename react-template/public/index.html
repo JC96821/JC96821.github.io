@@ -6,6 +6,23 @@
     </head>
     <body>
         <script>
+            // 斐波那契数列
+            const fibonaci = n => {
+                let slow = 1;
+                let fast = 1;
+                for (let count = 1; count < n; count++) {
+                    [slow, fast] = [fast, slow + fast];
+                    console.table({
+                        slow,
+                        fast
+                    });
+                }
+                return fast;
+            };
+            // new Array(9).fill().forEach((_item, index) => {
+            //     console.log('count: ', fibonaci(index + 1));
+            // });
+            console.log('count: ', fibonaci(4));
             ((window, docEl) => {
                 function isMobile(){
                     if((navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i))) {

@@ -14,7 +14,12 @@ const PREFIX_LEFT = `${PREFIX}-left`;
 export default () => {
     return (
         <Layout.Header className={PREFIX}>
-            <div className={PREFIX_LEFT}>JC技术博客</div>
+            <div className={PREFIX_LEFT}>
+                JC技术博客
+                <a href='/#/dashboard'>dashboard</a>
+                &nbsp;
+                <a href='/#/project'>project</a>
+            </div>
         </Layout.Header>
     );
 };
