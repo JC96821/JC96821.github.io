@@ -185,7 +185,7 @@ new Vue({
 ```
 
 *App.vue*
-```Vue
+```html
 <template>
   <div>
     <h1>{{name}}</h1>

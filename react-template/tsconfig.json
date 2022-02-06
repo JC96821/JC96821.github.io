@@ -21,7 +21,7 @@
             "@/*": ["src/*"]
         }
     },
-    "include": ["**/*.ts", "**/*.tsx"],
+    "include": ["**/*.ts", "**/*.tsx", "mock/index.js"],
     "exclude": [
         "node_modules",
         "build",

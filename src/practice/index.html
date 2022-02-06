@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <title></title>
+</head>
+
+<body>
+    <div id="root" class="container">
+        <button onclick="exector()">shaking</button>
+    </div>
+
+    <script>
+        // 节流
+        const throttle = (fn, delay) => {
+            let timer = null;
+            return () => {
+                if (timer) {
+                    return;
+                }
+                timer = setTimeout(() => {
+                    fn();
+                    clearTimeout(timer);
+                    timer = null;
+                }, delay);
+            };
+        };
+
+        const exector = throttle(() => {
+            console.log('throttle');
+        }, 1000);
+
+        // 防抖
+        const shaking = (fn, delay) => {
+            let timer = null;
+            return () => {
+                if (timer) {
+                    clearTimeout(timer);
+                    timer = null;
+                }
+                timer = setTimeout(() => {
+                    fn();
+                }, delay);
+            };
+        };
+
+        const exector = shaking(() => {
+            console.log('shaking');
+        }, 1000);
+
+    </script>
+</body>
+
+</html>

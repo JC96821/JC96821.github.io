@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import {ConfigProvider} from 'antd';
 import zhCN from 'antd/lib/locale/zh_CN';
 import 'antd/dist/antd.css';
-
 import Layout from '@/pages/layout';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import './index.less';
@@ -13,6 +12,8 @@ import reducer from './reducer';
 import {Provider} from 'react-redux';
 import thunk from 'redux-thunk';
 import {logger} from './reduxMiddleware';
+import {MyHooks} from '@/utils';
+import {Provider as ReducerProvider} from '@/store';
 
 const initState = {
     name: '张三',
@@ -21,13 +22,18 @@ const initState = {
 
 const store = createStore(reducer, initState, applyMiddleware(thunk, logger));
 
-ReactDOM.render(
+const render = () => ReactDOM.render(
     <ConfigProvider locale={zhCN}>
-        <Provider store={store}>
-            <ErrorBoundary>
-                <Layout />
-            </ErrorBoundary>
-        </Provider>
+        <ReducerProvider>
+            <Provider store={store}>
+                <ErrorBoundary>
+                    <Layout />
+                </ErrorBoundary>
+            </Provider>
+        </ReducerProvider>
     </ConfigProvider>,
     document.querySelector('#app')
 );
+// @ts-ignore
+window['hooks'] = new MyHooks(render);
+render();

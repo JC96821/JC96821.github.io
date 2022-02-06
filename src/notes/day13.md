@@ -1,20 +1,9 @@
-export const test = () => {
-    console.log('123 木头人');
-};
+## 模拟题十三
 
-export const useState = function(initValue: any) {
-    const stateList: any[] = [];
-    let cursor = 0;
-    let state = stateList[cursor] || initValue;
-
-    const setState = (value: any) => {
-        state[cursor] = value;
-    };
-
-    return [state, setState];
-};
-
-export class MyHooks {
+### react hooks原理
+简单写俩，多了放弃
+```javascript
+class MyHooks {
     stateList: any[];
     stateCursor: number;
     render: Function;
@@ -51,7 +40,8 @@ export class MyHooks {
     useEffect(callback: () => void, deps: any[]) {
         // 初次渲染
         if (!this.allDeps[this.effectCursor]) {
-            this.allDeps[this.effectCursor++] = deps;
+            this.allDeps[this.effectCursor] = deps;
+            ++this.effectCursor;
             callback();
             return;
         }
@@ -65,3 +55,51 @@ export class MyHooks {
         ++this.effectCursor;
     }
 }
+```
+
+## React怎么实现KeepAlive
+核心思想就是保存react组件实例
+```javascript
+/**
+* @file
+* @author jc
+*/
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+interface ICacheComponent {
+    active: boolean;
+    children: any;
+};
+
+const CacheCompontnt: React.FC<ICacheComponent> = ({
+    active,
+    children
+}) => {
+    const ref = React.createRef<HTMLDivElement>(); // 挂载节点
+    const [targetElement] = React.useState<any>(document.createElement('div')); // 缓存到内存中
+    
+    React.useLayoutEffect(() => {
+        if (active) {
+            ref.current?.appendChild(targetElement)
+        }
+        else {
+            try {
+                ref.current?.removeChild(targetElement);
+            }
+            catch(e) {
+            }
+        }
+    }, [active]);
+
+    return (
+        <>
+            <div ref={ref}></div>
+            {ReactDOM.createPortal(children, targetElement)}
+        </>
+    );
+};
+
+export default CacheCompontnt;
+```

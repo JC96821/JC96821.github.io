@@ -19,3 +19,21 @@ const fibonaci = n => {
     return fast;
 };
 ```
+
+### 异步加载图片
+```javascript
+const loadImg = async (url: string) => {
+    const img = document.createElement('img');
+    img.src = url;
+    return new Promise(resolve => {
+        img.onload = e => {
+            resolve(e);
+        }
+    });
+};
+
+loadImg('https://img-blog.csdnimg.cn/img_convert/402dfc6166ad0291cdacf31e95e2d4a0.png')
+.then(res => {
+    console.log('res: ', res);
+});
+```

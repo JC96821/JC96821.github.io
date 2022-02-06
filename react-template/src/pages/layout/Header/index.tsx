@@ -19,6 +19,10 @@ export default () => {
                 <a href='/#/dashboard'>dashboard</a>
                 &nbsp;
                 <a href='/#/project'>project</a>
+                &nbsp;
+                <a href='/#/about'>about</a>
+                &nbsp;
+                <a href='/#/tags'>tags</a>
             </div>
         </Layout.Header>
     );

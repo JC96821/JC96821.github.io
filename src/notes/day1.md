@@ -130,6 +130,7 @@ test.myBind(obj, {test: 'test'})('fffff');
 
 ### 函数柯里化，实现 add(1)(2)(3)
 
+- 方法一
 ```javascript
 function curry(val) {
     let result = val;
@@ -149,6 +150,32 @@ const exec = res => {
 };
 const fn = curry(1).use(exec).use(exec);
 console.log(fn.result());
+```
+
+- 方法二
+```javascript
+const compose = (...fns) => {
+    return num => {
+        return fns.reduce((res, nextFn) => {
+            res = nextFn(res);
+            return res;
+        }, num);
+    };
+};
+
+const fn1 = res => {
+    return res * 2;
+};
+
+const fn2 = res => {
+    return res * 3
+};
+
+const fn3 = res => {
+    return res * 4;
+};
+
+const exec = compose(fn1, fn2, fn3);
 ```
 
 ### EventLoop概念 以及 同步任务、宏任务、微任务执行顺序
